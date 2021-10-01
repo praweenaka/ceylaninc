@@ -290,7 +290,7 @@ if ($_GET["Command"] == "get_itm111") {
 
 
 
-    $sql = "update s_trn  set tru_qty = qty  where (ledindi ='INV' or ledindi ='PRO') and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' ";
+    $sql = "update s_trn  set tru_qty = qty  where  ledindi ='INV'   and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' ";
     $res = $conn->query($sql);   
 
     $sql = "update s_trn  set tru_qty = qty*-1  where ledindi ='GRN' and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' ";
@@ -315,7 +315,7 @@ if ($_GET["Command"] == "get_itm111") {
     SUM(CASE WHEN month(sdate) = '12' THEN qty END) AS decs 
     
     
-    from s_trn where year(sdate) ='" . $_GET['yer'] . "' and (ledindi ='INV' or ledindi ='PRO' or ledindi ='GRN')  and stk_no = '" . $_GET["stk_no"] . "';  
+    from s_trn where year(sdate) ='" . $_GET['yer'] . "' and (ledindi ='INV'  or ledindi ='GRN')  and stk_no = '" . $_GET["stk_no"] . "';  
 ) as ca ";
     //  echo $sql;
 
@@ -334,12 +334,12 @@ SUM(CASE WHEN month(sdate) = '10' THEN tru_qty END) AS oct,
 SUM(CASE WHEN month(sdate) = '11' THEN tru_qty END) AS nov,
 SUM(CASE WHEN month(sdate) = '12' THEN tru_qty END) AS decm
 
-from s_trn where year(sdate) ='" . $_GET['yer'] . "'   and (ledindi = 'INV' or ledindi = 'PRO'  or LEDINDI ='GRN' ) and stk_no  ='" . $_GET["stk_no"] . "'
+from s_trn where year(sdate) ='" . $_GET['yer'] . "'   and (ledindi = 'INV'    or LEDINDI ='GRN' ) and stk_no  ='" . $_GET["stk_no"] . "'
 ) as ca";
 
 
 
-    //  $sql = "select DATE_FORMAT(sdate, '%Y-%m') as sdate , sum(tru_qty) as qty from s_trn where (ledindi='INV' or ledindi = 'PRO' or ledindi ='GRN') and year(sdate) = '" . $_GET['yer']  . "' and stk_no = '" . $_GET["stk_no"] . "' group by DATE_FORMAT(sdate, '%Y-%m') order by sdate";     
+    //  $sql = "select DATE_FORMAT(sdate, '%Y-%m') as sdate , sum(tru_qty) as qty from s_trn where (ledindi='INV'   or ledindi ='GRN') and year(sdate) = '" . $_GET['yer']  . "' and stk_no = '" . $_GET["stk_no"] . "' group by DATE_FORMAT(sdate, '%Y-%m') order by sdate";     
 foreach ($conn->query($sql) as $row) {
 
         //echo date('j',strtotime($mon));
@@ -420,7 +420,7 @@ echo $row['QTYINHAND'].'/';
 
  
 
-    $sqltrn =  "select sum(qty) as qty from s_trn where sdate >= '" . $_GET["dte_from"] . "' and stk_no = '" . $_GET["stk_no"] . "' and ledindi <> 'INV' and ledindi <> 'PRO' and ledindi <> 'GINI' and ledindi <> 'GINR' and ledindi <> 'IOU' and ledindi <> 'ARR' ";
+    $sqltrn =  "select sum(qty) as qty from s_trn where sdate >= '" . $_GET["dte_from"] . "' and stk_no = '" . $_GET["stk_no"] . "' and ledindi <> 'INV' and   ledindi <> 'GINI' and ledindi <> 'GINR' and ledindi <> 'IOU' and ledindi <> 'ARR' ";
     $resulttrn = $conn->query($sqltrn); 
     $rowstrn = $resulttrn->fetch(); 
     if (!Is_Null($rowstrn['qty'])) {
@@ -468,7 +468,7 @@ echo $row['QTYINHAND'].'/';
     }
  
 
-    $sql_query = "select sum(qty) as qty from s_trn where sdate < '" . $_GET["dte_from"] . "' and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' and ((ledindi = 'ISO' or ledindi = 'ARR' or ledindi ='INV' or ledindi = 'PRO'  or ledindi ='PRO'   or ledindi = 'GINI' or ledindi ='IOU'))";
+    $sql_query = "select sum(qty) as qty from s_trn where sdate < '" . $_GET["dte_from"] . "' and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' and ((ledindi = 'ISO' or ledindi = 'ARR' or ledindi ='INV'   or ledindi = 'GINI' or ledindi ='IOU'))";
     if ($_GET["department"] != "All") {
         $sql_query .= " and DEPARTMENT ='" . $_GET["department"] . "'";
     }
@@ -532,10 +532,7 @@ foreach ($conn->query($sql) as $row) {
         $doc_type = "Sales Invoice";
         $fcolor = "#330066";
     }
-     if ($row["LEDINDI"] == "PRO") {
-        $doc_type = "Production";
-        $fcolor = "#330066";
-    }
+     
 
     if ($row["LEDINDI"] == "ARN") {
 
@@ -600,7 +597,7 @@ foreach ($conn->query($sql) as $row) {
 
         //==stock out
     $qty4 = "";
-    if (($row["LEDINDI"] == "INV") or ($row["LEDINDI"] == "PRO") or ( $row["LEDINDI"] == "ORC") or ( $row["LEDINDI"] == "GINI") or ( $row["LEDINDI"] == "ARR") or ( $row["LEDINDI"] == "IOU")) {
+    if (($row["LEDINDI"] == "INV") or   ( $row["LEDINDI"] == "ORC") or ( $row["LEDINDI"] == "GINI") or ( $row["LEDINDI"] == "ARR") or ( $row["LEDINDI"] == "IOU")) {
         $qty4 = $row["QTY"];
         $M_BAL = $M_BAL - $row["QTY"];
         ;
@@ -618,15 +615,6 @@ foreach ($conn->query($sql) as $row) {
 // <a href=\"settlement_history.php?refno=" . $row['REF_NO']. "&trn_type=INV\"  onclick=\"window.open(this.href,'mywin',`width=900,height=700`); return false;\"><font color=\"" . $fcolor . "\">" . $refno . "</font></a> 
             
     if ($row["LEDINDI"] == "INV") {
-        $return_val .= "<tr  bgcolor=\"#ffffff\" >
-        <td><a href=\"\" onClick=\"NewWindow('invoice_view.php?refno=" . $refno . "&trn_type=" . $row["LEDINDI"] . "','mywin','900','700','yes','center');return false\" onFocus=\"this.blur()\"><font color=\"" . $fcolor . "\">" . $refno . "</font></a></td>
-        <td><font color=\"" . $fcolor . "\">" . $sdate . "</font></td>
-        <td><font color=\"" . $fcolor . "\">" . $doc_type . "</font></td>
-        <td><font color=\"" . $fcolor . "\" align=right>" . number_format($qty3, 0, ".", ",") . "</font></td>
-        <td><font color=\"" . $fcolor . "\" align=right>" . number_format($qty4, 0, ".", ",") . "</font></td>
-        <td><font color=\"" . $fcolor . "\" align=right>" . number_format($M_BAL, 0, ".", ",") . "</font></td>
-        </tr>   ";
-    }else  if ($row["LEDINDI"] == "PRO") {
         $return_val .= "<tr  bgcolor=\"#ffffff\" >
         <td><a href=\"\" onClick=\"NewWindow('invoice_view.php?refno=" . $refno . "&trn_type=" . $row["LEDINDI"] . "','mywin','900','700','yes','center');return false\" onFocus=\"this.blur()\"><font color=\"" . $fcolor . "\">" . $refno . "</font></a></td>
         <td><font color=\"" . $fcolor . "\">" . $sdate . "</font></td>
@@ -772,10 +760,10 @@ if ($_GET["Command"] == "get_itm") {
             if ($row3 = $result3->fetch()) {
 
                 $mord = 0;
-                $sql4 =   "Select sum(qty) as qty from view_cusordmas_trn where department='" . $row2["CODE"] . "' and STK_NO='" . $row["STK_NO"] . "' and cancell='0' and invno ='0'" ;
+                $sql4 =   "Select sum(qty) as qty from view_cusordmas_trn where DEPARTMENT='" . $row2["CODE"] . "' and STK_NO='" . $row["STK_NO"] . "' and CANCELL='0' and INVNO ='0'" ;
                 $result4 = $conn->query($sql4);
                 if ($row4 = $result4->fetch()) {
-                    $mord = $row4['qty'];
+                    $mord = $row4['QTY'];
                 }
 
 
@@ -820,7 +808,7 @@ if ($_GET["Command"] == "get_itm") {
 
 
 
-    $sql = "update s_trn  set tru_qty = qty  where (ledindi ='INV' or ledindi ='PRO') and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' "; 
+    $sql = "update s_trn  set tru_qty = qty  where ledindi ='INV' and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' "; 
     $res = $conn->query($sql);   
 
     $sql = "update s_trn  set tru_qty = qty*-1  where ledindi ='GRN' and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' ";
@@ -845,7 +833,7 @@ if ($_GET["Command"] == "get_itm") {
     SUM(CASE WHEN month(sdate) = '12' THEN qty END) AS decs 
     
     
-    from s_trn where year(sdate) ='" . $_GET['yer'] . "' and (ledindi='INV' or ledindi ='PRO' or ledindi ='GRN')  and stk_no = '" . $_GET["stk_no"] . "';  
+    from s_trn where year(sdate) ='" . $_GET['yer'] . "' and (ledindi='INV'  or ledindi ='GRN')  and stk_no = '" . $_GET["stk_no"] . "';  
 ) as ca ";
     //	echo $sql;
 
@@ -864,12 +852,12 @@ SUM(CASE WHEN month(sdate) = '10' THEN tru_qty END) AS oct,
 SUM(CASE WHEN month(sdate) = '11' THEN tru_qty END) AS nov,
 SUM(CASE WHEN month(sdate) = '12' THEN tru_qty END) AS decm
 
-from s_trn where year(sdate) ='" . $_GET['yer'] . "'   and (ledindi = 'INV' or ledindi = 'PRO'  or LEDINDI ='GRN' ) and stk_no  ='" . $_GET["stk_no"] . "'
+from s_trn where year(sdate) ='" . $_GET['yer'] . "'   and (ledindi = 'INV'    or LEDINDI ='GRN' ) and stk_no  ='" . $_GET["stk_no"] . "'
 ) as ca";
 
 
 
-    //	$sql = "select DATE_FORMAT(sdate, '%Y-%m') as sdate , sum(tru_qty) as qty from s_trn where (ledindi='INV'   or ledindi ='PRO'  or ledindi ='GRN') and year(sdate) = '" . $_GET['yer']  . "' and stk_no = '" . $_GET["stk_no"] . "' group by DATE_FORMAT(sdate, '%Y-%m') order by sdate";		
+    //	$sql = "select DATE_FORMAT(sdate, '%Y-%m') as sdate , sum(tru_qty) as qty from s_trn where (ledindi='INV'     or ledindi ='GRN') and year(sdate) = '" . $_GET['yer']  . "' and stk_no = '" . $_GET["stk_no"] . "' group by DATE_FORMAT(sdate, '%Y-%m') order by sdate";		
 foreach ($conn->query($sql) as $row2) {
 
         //echo date('j',strtotime($mon));
@@ -904,32 +892,30 @@ $ResponseXML .= "<ord_table><![CDATA[ <table   class=\"table table-striped\">
 </tr>
 <tr>
 <th>Ref No</th>
-<th>Ord Date</th>
-<th>Schedule Date</th>
+<th>Ord Date</th> 
 <th>Qty</th>
-<th>LC No</th>
+<th>Quo No</th>
 <th>Supplier</th>
 </tr>";
 
 
 if ($_GET["department"] == "All") {
 
-    $sql =  "select * from vieword where  ( SDATE >=  '" . $_GET["dte_from"] . "') and STK_NO='" . $_GET["stk_no"] . "' and cancel=0 order by refno" ;
+    $sql =  "select * from vieword where  ( SDATE >=  '" . $_GET["dte_from"] . "') and STK_NO='" . $_GET["stk_no"] . "' and CANCELL=0 order by REFNO" ;
 } else {
 
-    $sql =   "select * from vieword where  ( SDATE >=  '" . $_GET["dte_from"] . "') and STK_NO='" . $_GET["stk_no"] . "' and DEP_CODE='" . $_GET["department"] . "' AND cancel=0 order by refno" ;
-}
+    $sql =   "select * from vieword where  ( SDATE >=  '" . $_GET["dte_from"] . "') and STK_NO='" . $_GET["stk_no"] . "' and DEPARTMENT='" . $_GET["department"] . "' AND CANCELL=0 order by REFNO" ;
+} 
 foreach ($conn->query($sql) as $row) {
     $ResponseXML .= "<tr >
     <td>" . $row["REFNO"] . "</td>
-    <td>" . $row["SDATE"] . "</td>
-    <td>" . $row["S_date"] . "</td>
-    <td>" . number_format($row["ORD_QTY"], 0, ".", ",") . "</td>
-    <td>" . $row["LC_No"] . "</td>
-    <td>" . $row["SUP_NAME"] . "</td>
+    <td>" . $row["SDATE"] . "</td> 
+    <td>" . number_format($row["QTY"], 0, ".", ",") . "</td>
+    <td>" . $row["QUONO"] . "</td>
+    <td>" . $row["CUSNAME"] . "</td>
     </tr>	";
 }
-
+ 
 
 $ResponseXML .= "</table>]]></ord_table>";
 
@@ -948,7 +934,7 @@ function display() {
     $rowsmas = $resultsmas->fetch();
 
 
-   $sqltrn =  "select sum(qty) as qty from s_trn where sdate >= '" . $_GET["dte_from"] . "' and stk_no = '" . $_GET["stk_no"] . "' and ledindi <> 'INV' and ledindi <> 'PRO' and ledindi <> 'GINI' and ledindi <> 'GINR' and ledindi <> 'IOU' and ledindi <> 'ARR' ";
+   $sqltrn =  "select sum(qty) as qty from s_trn where sdate >= '" . $_GET["dte_from"] . "' and stk_no = '" . $_GET["stk_no"] . "' and ledindi <> 'INV' and   ledindi <> 'GINI' and ledindi <> 'GINR' and ledindi <> 'IOU' and ledindi <> 'ARR' ";
     $resulttrn = $conn->query($sqltrn); 
     $rowstrn = $resulttrn->fetch(); 
     if (!Is_Null($rowstrn['qty'])) {
@@ -996,7 +982,7 @@ function display() {
     }
  
 
-    $sql_query = "select sum(qty) as qty from s_trn where sdate < '" . $_GET["dte_from"] . "' and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' and ((ledindi = 'ISO' or ledindi = 'ARR' or ledindi ='INV' or ledindi ='PRO' or ledindi = 'GINI' or ledindi ='IOU'))";
+    $sql_query = "select sum(qty) as qty from s_trn where sdate < '" . $_GET["dte_from"] . "' and sdate >= '" . $sdate . "' and stk_no = '" . $_GET["stk_no"] . "' and ((ledindi = 'ISO' or ledindi = 'ARR' or ledindi ='INV' or ledindi = 'GINI' or ledindi ='IOU'))";
     if ($_GET["department"] != "All") {
         $sql_query .= " and DEPARTMENT ='" . $_GET["department"] . "'";
     }
@@ -1031,7 +1017,7 @@ function display() {
   <td><font color=\"" . $fcolor . "\" align=right>" . number_format($M_BAL, 0, ".", ",") . "</font></td>
   </tr>";
 
-
+ 
 
   if ($_GET["department"] == "All") {
 
@@ -1060,10 +1046,7 @@ foreach ($conn->query($sql) as $row) {
         $doc_type = "Sales Invoice";
         $fcolor = "#330066";
     }
-     if ($row["LEDINDI"] == "PRO") {
-        $doc_type = "Production";
-        $fcolor = "#330066";
-    }
+   
 
     if ($row["LEDINDI"] == "ARN") {
 
@@ -1128,7 +1111,7 @@ foreach ($conn->query($sql) as $row) {
 
         //==stock out
     $qty4 = "";
-    if (($row["LEDINDI"] == "INV") or ($row["LEDINDI"] == "PRO") or ( $row["LEDINDI"] == "ORC") or ( $row["LEDINDI"] == "GINI") or ( $row["LEDINDI"] == "ARR") or ( $row["LEDINDI"] == "IOU")) {
+    if (($row["LEDINDI"] == "INV")   or ( $row["LEDINDI"] == "ORC") or ( $row["LEDINDI"] == "GINI") or ( $row["LEDINDI"] == "ARR") or ( $row["LEDINDI"] == "IOU")) {
         $qty4 = $row["QTY"];
         $M_BAL = $M_BAL - $row["QTY"];
         ;
@@ -1153,16 +1136,7 @@ foreach ($conn->query($sql) as $row) {
         <td><font color=\"" . $fcolor . "\" align=right>" . number_format($qty4, 0, ".", ",") . "</font></td>
         <td><font color=\"" . $fcolor . "\" align=right>" . number_format($M_BAL, 0, ".", ",") . "</font></td>
         </tr>   ";
-    } else if ($row["LEDINDI"] == "PRO") {
-        $return_val .= "<tr  bgcolor=\"#ffffff\" >
-        <td><a href=\"\" onClick=\"NewWindow('invoice_view.php?refno=" . $refno . "&trn_type=" . $row["LEDINDI"] . "','mywin','900','700','yes','center');return false\" onFocus=\"this.blur()\"><font color=\"" . $fcolor . "\">" . $refno . "</font></a></td>
-        <td><font color=\"" . $fcolor . "\">" . $sdate . "</font></td>
-        <td><font color=\"" . $fcolor . "\">" . $doc_type . "</font></td>
-        <td><font color=\"" . $fcolor . "\" align=right>" . number_format($qty3, 0, ".", ",") . "</font></td>
-        <td><font color=\"" . $fcolor . "\" align=right>" . number_format($qty4, 0, ".", ",") . "</font></td>
-        <td><font color=\"" . $fcolor . "\" align=right>" . number_format($M_BAL, 0, ".", ",") . "</font></td>
-        </tr>   ";
-    } else if (($row["LEDINDI"] == "DGRN") or ( $row["LEDINDI"] == "GRN")) {
+     } else if (($row["LEDINDI"] == "DGRN") or ( $row["LEDINDI"] == "GRN")) {
         $return_val .= "<tr  bgcolor=\"#ffffff\" >
         <td><a href=\"\" onClick=\"NewWindow('../grn_display.php?grn=" . $refno . "&trn_type=" . $row["LEDINDI"] . "','mywin','900','700','yes','center');return false\" onFocus=\"this.blur()\"><font color=\"" . $fcolor . "\">" . $refno . "</font></a></td>
         <td><font color=\"" . $fcolor . "\">" . $sdate . "</font></td>
