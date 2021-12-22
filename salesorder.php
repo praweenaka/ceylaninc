@@ -7,7 +7,7 @@ include './connection_sql.php';
 
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">SALES ORDER</h3>
+            <h3 class="box-title">SALES ORDERs</h3>
               <h4 style="float: right;height: 3px;"><b id="time"></b></h4>
         </div>
         <form name= "form1" role="form" class="form-horizontal">
