@@ -11,7 +11,7 @@
 <section class="content">
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">CHEQUE MODIFY</h3>
+            <h3 class="box-title">CHEQUE MODIFY </h3>
             <h4 style="float: right;height: 3px;"><b id="time"></b></h4>
         </div>
         <form role="form" class="form-horizontal">
@@ -24,7 +24,7 @@
                         <span class="fa fa-save"></span> &nbsp; Save
                     </a> 
                     <!--<a onclick="print_inv();" class="btn btn-default ">-->
-                    <!--    <span class="fa fa-print"></span> &nbsp; Print-->
+                        <span class="fa fa-print"></span> &nbsp; Print
                     <!--</a>-->
                     <!--<a onclick="cancel_inv();" class="btn btn-danger">-->
                     <!--    <span class="fa fa-trash"></span> &nbsp; Cancel-->
